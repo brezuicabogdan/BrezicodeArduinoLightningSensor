@@ -44,7 +44,7 @@ void calibrate()
 #ifdef DEBUG
     Serial.print("Baseline: ");
     Serial.println(baseline);
-    Serial.print("Max INtensity: ");
+    Serial.print("Max Intensity: ");
     Serial.println(maxForPrc);
 #endif
     calibrated = true;
@@ -52,16 +52,18 @@ void calibrate()
 
 void handleI2CRequest()
 {
+    byte buffer[2];
     if (calibrated)
     {
-        Wire.write(spm);
-        Wire.write(sIntensityPrc);
+        buffer[0] = spm;
+        buffer[1] = sIntensityPrc;
     }
     else
     {
-        Wire.write((byte)0);
-        Wire.write((byte)0);
+        buffer[0] = 0;
+        buffer[1] = 0;
     }
+    Wire.write(buffer, 2);
 }
 void setup()
 {
