@@ -22,11 +22,12 @@ uint8_t readings_count = 0;
 bool calibrated = false;
 long timer = 0;
 unsigned int baseline = 512;
+byte sendBuffer[2] = {0, 0};
 
 uint16_t spm = 0;
 uint16_t sIntensity = 0;
-uint16_t maxForPrc = 512;
 byte sIntensityPrc = 0;
+uint16_t maxForPrc = 512;
 
 void calibrate()
 {
@@ -52,19 +53,11 @@ void calibrate()
 
 void handleI2CRequest()
 {
-    byte buffer[2];
-    if (calibrated)
-    {
-        buffer[0] = spm;
-        buffer[1] = sIntensityPrc;
-    }
-    else
-    {
-        buffer[0] = 0;
-        buffer[1] = 0;
-    }
-    Wire.write(buffer, 2);
+    sendBuffer[0] = spm;
+    sendBuffer[1] = sIntensityPrc;
+    Wire.write(sendBuffer, 2);
 }
+
 void setup()
 {
 #if FASTADC
